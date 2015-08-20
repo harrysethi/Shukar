@@ -30,6 +30,14 @@ public class Node {
 		this.children.add(ID);
 	}
 
+	public List<Integer> getParents() {
+		return parents;
+	}
+
+	public List<Integer> getChildren() {
+		return children;
+	}
+
 	@Override
 	public String toString() {
 		return this.ID + ": " + this.parents + "," + this.children;

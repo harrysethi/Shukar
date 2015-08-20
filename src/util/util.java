@@ -1,5 +1,7 @@
 package util;
+
 import java.util.Random;
+import java.util.StringTokenizer;
 
 /**
  * 
@@ -15,4 +17,5 @@ public class util {
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
+
 }
