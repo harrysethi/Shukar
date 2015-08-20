@@ -6,7 +6,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import util.util;
 
@@ -46,12 +50,29 @@ public class BayesianNetwork {
 		for (int i = 0; i < numOfNodes; i++) {
 			int rand = util.randInt(1, maxChildren);
 
-			for (int j = i + 1; j <= i + rand; j++) {
+			List<Integer> tempList = new ArrayList<Integer>();
+			for(int j=i+1;j<numOfNodes;j++){
+				tempList.add(j);
+			}
+			
+			for(int j=0;j<rand;j++){
+				if (tempList.isEmpty())
+					break;
+				int randChildIndex = util.randInt(0, tempList.size()-1);
+				int randChild = tempList.get(randChildIndex);
+						
+				network.nodes[i].addChild(randChild);
+				network.nodes[randChild].addParent(i);
+				
+				tempList.remove(randChildIndex);
+			}
+			
+			/*for (int j = i + 1; j <= i + rand; j++) {
 				if (j >= numOfNodes)
 					break;
 				network.nodes[i].addChild(j);
 				network.nodes[j].addParent(i);
-			}
+			}*/
 		}
 
 		return network;
