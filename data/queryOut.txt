@@ -1,0 +1,4 @@
+query:[1] obs:[2] dsep:[4] req-obs:[] req-unobs:[1]
+query:[3,4] obs:[] dsep:[] req-obs:[] req-unobs:[1,2,3,4]
+query:[2,4] obs:[3,5] dsep:[] req-obs:[3] req-unobs:[1,2,4]
+query:[2,4] obs:[5] dsep:[] req-obs:[5] req-unobs:[1,2,3,4]

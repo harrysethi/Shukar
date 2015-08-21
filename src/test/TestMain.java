@@ -24,7 +24,7 @@ public class TestMain {
 		BayesianNetwork bayesianNetwork = IO.readFromFile("data/sample-bn.txt");
 		//bayesianNetwork.writeToFile("data/out.txt");
 		//System.out.println(bayesianNetwork.getNodes());
-		QueryHelper.processQueries("data/sample-query.txt", bayesianNetwork);
+		QueryHelper.processQueries("data/sample-query.txt", "data/queryOut.txt" , bayesianNetwork);
 	}
 
 }

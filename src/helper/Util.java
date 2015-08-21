@@ -34,7 +34,7 @@ public class Util {
 		return list2Ret;
 	}
 	
-	public static String getNodeIDsAsDelimetedStr(int i, List<Integer> nodeIDs) {
+	public static String getNodeIDsAsDelimetedStr(List<Integer> nodeIDs) {
 		StringBuilder sb = new StringBuilder("");
 		
 		sb.append("[");

@@ -26,7 +26,7 @@ public class IO {
 		for(int i=0;i<network.getNumOfNodes();i++){
 			pw.print(i+1);
 			pw.print(" ");
-			pw.println(Util.getNodeIDsAsDelimetedStr(i, network.getNodeByID(i).getChildren()));
+			pw.println(Util.getNodeIDsAsDelimetedStr(network.getNodeByID(i).getChildren()));
 		}
 		
 		pw.close();

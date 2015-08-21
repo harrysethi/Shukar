@@ -4,8 +4,11 @@
 package helper;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,31 +23,64 @@ import network.Node;
  *
  */
 public class QueryHelper {
-	public static void processQueries(String filePath, BayesianNetwork network)
-			throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(filePath));
+	public static void processQueries(String inFilePath, String outFilePath,
+			BayesianNetwork network) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(inFilePath));
 		int numOfQueries = Integer.parseInt(br.readLine());
 
+		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(
+				outFilePath)));
 		for (int i = 0; i < numOfQueries; i++) {
 			System.out.println("\n----processing query: " + (i + 1) + "\n");
 			network.resetAllFlags();
 
 			Queue<Scheduled> scheduledQ = new LinkedList<Scheduled>();
-			readQuery(network, br, scheduledQ);
+
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			String queryNodeIDsStr = st.nextToken();
+			String obsNodeIDsStr = st.nextToken();
+
+			readQuery(network, scheduledQ, queryNodeIDsStr, obsNodeIDsStr);
 			processScheduledQ(network, scheduledQ);
 
-			List<Integer> dSeparatedNodes = new ArrayList<Integer>();
-			List<Integer> requisiteObsNodes = new ArrayList<Integer>();
-			List<Integer> requisiteUnobsNodes = new ArrayList<Integer>();
+			List<Integer> dSeparatedNodeIDs = new ArrayList<Integer>();
+			List<Integer> requisiteObsNodeIDs = new ArrayList<Integer>();
+			List<Integer> requisiteUnobsNodeIDs = new ArrayList<Integer>();
 
-			setRequiredLists(network, dSeparatedNodes, requisiteObsNodes,
-					requisiteUnobsNodes);
+			setRequiredLists(network, dSeparatedNodeIDs, requisiteObsNodeIDs,
+					requisiteUnobsNodeIDs);
 
-			printReqListsOnConsole(dSeparatedNodes, requisiteObsNodes,
-					requisiteUnobsNodes);
+			printReqListsOnConsole(dSeparatedNodeIDs, requisiteObsNodeIDs,
+					requisiteUnobsNodeIDs);
+
+			printReqListsInFile(pw, queryNodeIDsStr, obsNodeIDsStr,
+					dSeparatedNodeIDs, requisiteObsNodeIDs,
+					requisiteUnobsNodeIDs);
 		}
 
 		br.close();
+		pw.close();
+	}
+
+	private static void printReqListsInFile(PrintWriter pw,
+			String queryNodeIDsStr, String obsNodeIDsStr,
+			List<Integer> dSeparatedNodeIDs, List<Integer> requisiteObsNodeIDs,
+			List<Integer> requisiteUnobsNodeIDs) {
+		pw.print("query:");
+		pw.print(queryNodeIDsStr);
+		pw.print(" ");
+		pw.print("obs:");
+		pw.print(obsNodeIDsStr);
+		pw.print(" ");
+		pw.print("dsep:");
+		pw.print(Util.getNodeIDsAsDelimetedStr(dSeparatedNodeIDs));
+		pw.print(" ");
+		pw.print("req-obs:");
+		pw.print(Util.getNodeIDsAsDelimetedStr(requisiteObsNodeIDs));
+		pw.print(" ");
+		pw.print("req-unobs:");
+		pw.print(Util.getNodeIDsAsDelimetedStr(requisiteUnobsNodeIDs));
+		pw.println();
 	}
 
 	private static void printReqListsOnConsole(List<Integer> dSeparatedNodes,
@@ -152,16 +188,17 @@ public class QueryHelper {
 		}
 	}
 
-	private static void readQuery(BayesianNetwork network, BufferedReader br,
-			Queue<Scheduled> scheduledQ) throws IOException {
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		for (Integer queryNodeID : Util.getIDsFromStr(st.nextToken())) {
+	private static void readQuery(BayesianNetwork network,
+			Queue<Scheduled> scheduledQ, String queryNodeIDsStr,
+			String obsNodeIDsStr) throws IOException {
+
+		for (Integer queryNodeID : Util.getIDsFromStr(queryNodeIDsStr)) {
 			Scheduled scheduled = new Scheduled(queryNodeID, Direction.CHILD,
 					network);
 			scheduledQ.add(scheduled);
 		}
 
-		for (Integer obsNodeID : Util.getIDsFromStr(st.nextToken())) {
+		for (Integer obsNodeID : Util.getIDsFromStr(obsNodeIDsStr)) {
 			network.getNodeByID(obsNodeID).setObserved(true);
 		}
 	}
