@@ -1,5 +1,7 @@
 package network;
 
+import helper.Util;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -7,12 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
-
-import util.util;
 
 /**
  * 
@@ -48,7 +46,7 @@ public class BayesianNetwork {
 		BayesianNetwork network = new BayesianNetwork(numOfNodes);
 
 		for (int i = 0; i < numOfNodes; i++) {
-			int rand = util.randInt(1, maxChildren);
+			int rand = Util.randInt(1, maxChildren);
 
 			List<Integer> tempList = new ArrayList<Integer>();
 			for(int j=i+1;j<numOfNodes;j++){
@@ -58,7 +56,7 @@ public class BayesianNetwork {
 			for(int j=0;j<rand;j++){
 				if (tempList.isEmpty())
 					break;
-				int randChildIndex = util.randInt(0, tempList.size()-1);
+				int randChildIndex = Util.randInt(0, tempList.size()-1);
 				int randChild = tempList.get(randChildIndex);
 						
 				network.nodes[i].addChild(randChild);
@@ -77,19 +75,28 @@ public class BayesianNetwork {
 
 		return network;
 	}
+	
+	public void resetAllFlags() {
+		for(Node node : this.nodes){
+			node.setVisited(false);
+			node.setMarkedBottom(false);
+			node.setMarkedTop(false);
+			node.setObserved(false);
+		}
+	}
 
-	public static void writeToFile(String filePath, BayesianNetwork network) throws IOException {
+	public void writeToFile(String filePath) throws IOException {
 		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(
 				filePath)));
-		pw.println(network.numOfNodes);
+		pw.println(this.numOfNodes);
 		
-		for(int i=0;i<network.numOfNodes;i++){
+		for(int i=0;i<this.numOfNodes;i++){
 			pw.print(i+1);
 			pw.print(" [");
 			
-			int childrenLen = network.getNodeByID(i).getChildren().size();
+			int childrenLen = this.getNodeByID(i).getChildren().size();
 			int childrenIndex = 0;
-			for (Integer childID : network.getNodeByID(i).getChildren()){
+			for (Integer childID : this.getNodeByID(i).getChildren()){
 				pw.print(childID+1);
 				childrenIndex++;
 				if(childrenIndex != childrenLen) pw.print(",");
@@ -113,14 +120,9 @@ public class BayesianNetwork {
 
 			int ID = Integer.parseInt(st.nextToken()) - 1;
 
-			int index = 1;
-			char[] children = st.nextToken().toCharArray();
-
-			while (index < children.length - 1) {
-				int childID = children[index++] - '0' - 1;
+			for(Integer childID : Util.getIDsFromStr(st.nextToken())){
 				network.nodes[ID].addChild(childID);
 				network.nodes[childID].addParent(ID);
-				index++;
 			}
 		}
 
