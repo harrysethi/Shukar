@@ -33,5 +33,22 @@ public class Util {
 		
 		return list2Ret;
 	}
+	
+	public static String getNodeIDsAsDelimetedStr(int i, List<Integer> nodeIDs) {
+		StringBuilder sb = new StringBuilder("");
+		
+		sb.append("[");
+		
+		int len = nodeIDs.size();
+		int index = 0;
+		for (Integer ID : nodeIDs){
+			sb.append(ID+1);
+			index++;
+			if(index != len) sb.append(",");
+		}
+		sb.append("]");
+		
+		return sb.toString();
+	}
 
 }

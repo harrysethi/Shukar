@@ -2,15 +2,8 @@ package network;
 
 import helper.Util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * 
@@ -24,13 +17,17 @@ public class BayesianNetwork {
 	private int numOfNodes;
 	private Node[] nodes;
 
-	private BayesianNetwork(int numOfNodes) {
+	public BayesianNetwork(int numOfNodes) {
 		this.numOfNodes = numOfNodes;
 		nodes = new Node[numOfNodes];
 
 		for (int i = 0; i < numOfNodes; i++) {
 			nodes[i] = new Node(i);
 		}
+	}
+	
+	public int getNumOfNodes() {
+		return this.numOfNodes;
 	}
 
 	public Node getNodeByID(int ID) {
@@ -83,50 +80,5 @@ public class BayesianNetwork {
 			node.setMarkedTop(false);
 			node.setObserved(false);
 		}
-	}
-
-	public void writeToFile(String filePath) throws IOException {
-		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(
-				filePath)));
-		pw.println(this.numOfNodes);
-		
-		for(int i=0;i<this.numOfNodes;i++){
-			pw.print(i+1);
-			pw.print(" [");
-			
-			int childrenLen = this.getNodeByID(i).getChildren().size();
-			int childrenIndex = 0;
-			for (Integer childID : this.getNodeByID(i).getChildren()){
-				pw.print(childID+1);
-				childrenIndex++;
-				if(childrenIndex != childrenLen) pw.print(",");
-			}
-			pw.println("]");
-		}
-		
-		pw.close();
-	}
-
-	public static BayesianNetwork readFromFile(String filePath)
-			throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(filePath));
-
-		int numOfNodes = Integer.parseInt(br.readLine());
-
-		BayesianNetwork network = new BayesianNetwork(numOfNodes);
-
-		for (int i = 0; i < numOfNodes; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-
-			int ID = Integer.parseInt(st.nextToken()) - 1;
-
-			for(Integer childID : Util.getIDsFromStr(st.nextToken())){
-				network.nodes[ID].addChild(childID);
-				network.nodes[childID].addParent(ID);
-			}
-		}
-
-		br.close();
-		return network;
 	}
 }
