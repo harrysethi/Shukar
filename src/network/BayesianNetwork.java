@@ -1,9 +1,14 @@
 package network;
 
+import helper.Direction;
 import helper.Util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.naming.directory.DirContext;
 
 /**
  * 
@@ -71,6 +76,26 @@ public class BayesianNetwork {
 		}
 
 		return network;
+	}
+	
+	public void getDsepPairs() {
+		boolean[] processedArray = new boolean[this.numOfNodes];
+		
+		List<Set<Integer>> listOfProcessedSets = new ArrayList<Set<Integer>>();
+		for(int i=0;i<this.numOfNodes;i++) {
+			if(processedArray[i]) continue;
+			
+			Set<Integer> processedSet = dfs(i, Direction.CHILD);
+			listOfProcessedSets.add(processedSet);
+		}
+		
+	}
+	
+	private Set<Integer> dfs(Integer nodeNum, Direction dir){
+		Set<Integer> processedSet = new HashSet<Integer>();
+		processedSet.
+		
+		return processedSet;
 	}
 	
 	public void resetAllFlags() {
