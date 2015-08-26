@@ -20,11 +20,11 @@ public class TestMain {
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException{
-		//BayesianNetwork bayesianNetwork = BayesianNetwork.generateNetwork(10, 5);
-		BayesianNetwork bayesianNetwork = IO.readFromFile("data/sample-bn.txt");
-		//bayesianNetwork.writeToFile("data/out.txt");
+		//BayesianNetwork bayesianNetwork = BayesianNetwork.generateNetwork(10, 2);
+		BayesianNetwork bayesianNetwork = IO.readFromFile("data/sample-bn2.txt");
+		//IO.writeToFile("data/bn_my.txt", bayesianNetwork);
 		//System.out.println(bayesianNetwork.getNodes());
-		QueryHelper.processQueries("data/sample-query.txt", "data/queryOut.txt" , bayesianNetwork);
+		QueryHelper.processQueries("data/sample-query2.txt", "data/query_out.txt" , bayesianNetwork);
 	}
 
 }

@@ -18,7 +18,7 @@ import network.BayesianNetwork;
  *
  */
 public class IO {
-	public void writeToFile(String filePath, BayesianNetwork network) throws IOException {
+	public static void writeToFile(String filePath, BayesianNetwork network) throws IOException {
 		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(
 				filePath)));
 		pw.println(network.getNumOfNodes());
