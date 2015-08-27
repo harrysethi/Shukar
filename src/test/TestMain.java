@@ -4,7 +4,6 @@
 package test;
 
 import helper.IO;
-import helper.QueryHelper;
 
 import java.io.IOException;
 
@@ -21,10 +20,11 @@ public class TestMain {
 	 */
 	public static void main(String[] args) throws IOException{
 		//BayesianNetwork bayesianNetwork = BayesianNetwork.generateNetwork(10, 2);
-		BayesianNetwork bayesianNetwork = IO.readFromFile("data/sample-bn2.txt");
+		BayesianNetwork bayesianNetwork = IO.readNetworkFromFile("data/sample-bn2.txt");
 		//IO.writeToFile("data/bn_my.txt", bayesianNetwork);
 		//System.out.println(bayesianNetwork.getNodes());
-		QueryHelper.processQueries("data/sample-query2.txt", "data/query_out.txt" , bayesianNetwork);
+		//QueryHelper.processQueries("data/sample-query2.txt", "data/query_out.txt" , bayesianNetwork);
+		bayesianNetwork.getDsepPairs("data/dSepPairsInput.txt", "data/dSepPairsOut");
 	}
 
 }

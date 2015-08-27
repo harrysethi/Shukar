@@ -21,6 +21,12 @@ public class Node {
 	private boolean isMarkedBottom;
 	private boolean isVisited;
 
+	private ProcessedNode processedDetails;
+
+	public ProcessedNode getProcessedDetails() {
+		return processedDetails;
+	}
+
 	public boolean isVisited() {
 		return isVisited;
 	}
@@ -33,6 +39,7 @@ public class Node {
 		this.ID = ID;
 		parents = new ArrayList<Integer>();
 		children = new ArrayList<Integer>();
+		processedDetails = new ProcessedNode();
 	}
 
 	public int getID() {
