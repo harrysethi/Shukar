@@ -127,7 +127,8 @@ public class QueryHelper {
 			List<Integer> dSeparatedNodes, List<Integer> requisiteObsNodes,
 			List<Integer> requisiteProbNodes) {
 		for (Node node : network.getNodes()) {
-			if (node.isObserved() || !node.isVisited()) {
+			//if (node.isObserved() || !node.isVisited()) {
+			if(!node.isMarkedBottom()){
 				dSeparatedNodes.add(node.getID());
 			}
 

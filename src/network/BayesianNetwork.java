@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -53,7 +54,7 @@ public class BayesianNetwork {
 		for (int i = 0; i < numOfNodes; i++) {
 			int rand = Util.randInt(1, maxChildren);
 
-			List<Integer> tempList = new ArrayList<Integer>();
+			List<Integer> tempList = new LinkedList<Integer>();
 			for (int j = i + 1; j < numOfNodes; j++) {
 				tempList.add(j);
 			}
