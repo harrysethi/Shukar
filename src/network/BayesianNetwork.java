@@ -11,9 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 
@@ -71,12 +69,6 @@ public class BayesianNetwork {
 
 				tempList.remove(randChildIndex);
 			}
-
-			/*
-			 * for (int j = i + 1; j <= i + rand; j++) { if (j >= numOfNodes)
-			 * break; network.nodes[i].addChild(j);
-			 * network.nodes[j].addParent(i); }
-			 */
 		}
 
 		return network;
@@ -139,7 +131,7 @@ public class BayesianNetwork {
 		
 		for (int i = 0; i < this.numOfNodes; i++) {
 			for (int j = i + 1; j < this.numOfNodes; j++) {
-				if(!reachabilityArray[i][j] || this.getNodeByID(i).isObserved()){
+				if(!reachabilityArray[i][j] || this.getNodeByID(i).isObserved() || this.getNodeByID(j).isObserved()){
 					dSepPairs.add(new Pair(i+1, j+1));
 				}
 			}

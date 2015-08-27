@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -19,8 +20,58 @@ import network.BayesianNetwork;
  *
  */
 public class IO {
+	public static void printReqListsInFile(PrintWriter pw,
+			String queryNodeIDsStr, String obsNodeIDsStr,
+			List<Integer> dSeparatedNodeIDs, List<Integer> requisiteObsNodeIDs,
+			List<Integer> requisiteProbNodeIDs) {
+		pw.print("query:");
+		pw.print(queryNodeIDsStr);
+		pw.print(" ");
+		pw.print("obs:");
+		pw.print(obsNodeIDsStr);
+		pw.print(" ");
+		pw.print("dsep:");
+		pw.print(Util.getNodeIDsAsDelimetedStr(dSeparatedNodeIDs));
+		pw.print(" ");
+		pw.print("req-prob:");
+		pw.print(Util.getNodeIDsAsDelimetedStr(requisiteProbNodeIDs));
+		pw.print(" ");
+		pw.print("req-obs:");
+		pw.print(Util.getNodeIDsAsDelimetedStr(requisiteObsNodeIDs));
+		pw.println();
+	}
+
+	public static void printReqListsOnConsole(List<Integer> dSeparatedNodes,
+			List<Integer> requisiteObsNodes, List<Integer> requisiteProbNodes) {
+		System.out.println("\n====D-SeparatedNodes======");
+		for (int nodeID : dSeparatedNodes) {
+			System.out.print(nodeID + 1);
+			System.out.print("|");
+		}
+		System.out.println();
+
+		System.out.println("\n====RequisiteProbNodes======");
+		for (int nodeID : requisiteProbNodes) {
+			System.out.print(nodeID + 1);
+			System.out.print("|");
+		}
+		System.out.println();
+
+		System.out.println("\n====RequisiteObsNodes======");
+		for (int nodeID : requisiteObsNodes) {
+			System.out.print(nodeID + 1);
+			System.out.print("|");
+		}
+		System.out.println();
+	}
+	
 	public static void writeToFile(String filePath, BayesianNetwork network)
 			throws IOException {
+		if(network==null){
+			System.err.println("Bayesian network === null");
+			System.exit(1);
+		}
+		
 		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(
 				filePath)));
 		pw.println(network.getNumOfNodes());
@@ -28,6 +79,8 @@ public class IO {
 		for (int i = 0; i < network.getNumOfNodes(); i++) {
 			pw.print(i + 1);
 			pw.print(" ");
+			Collections.sort(network.getNodeByID(i)
+					.getChildren());
 			pw.println(Util.getNodeIDsAsDelimetedStr(network.getNodeByID(i)
 					.getChildren()));
 		}

@@ -25,6 +25,11 @@ import network.Node;
 public class QueryHelper {
 	public static void processQueries(String inFilePath, String outFilePath,
 			BayesianNetwork network) throws IOException {
+		if(network==null){
+			System.err.println("Bayesian network === null");
+			System.exit(1);
+		}
+		
 		BufferedReader br = new BufferedReader(new FileReader(inFilePath));
 		int numOfQueries = Integer.parseInt(br.readLine());
 
@@ -45,66 +50,21 @@ public class QueryHelper {
 
 			List<Integer> dSeparatedNodeIDs = new ArrayList<Integer>();
 			List<Integer> requisiteObsNodeIDs = new ArrayList<Integer>();
-			List<Integer> requisiteUnobsNodeIDs = new ArrayList<Integer>();
+			List<Integer> requisiteProbNodeIDs = new ArrayList<Integer>();
 
 			setRequiredLists(network, dSeparatedNodeIDs, requisiteObsNodeIDs,
-					requisiteUnobsNodeIDs);
+					requisiteProbNodeIDs);
 
-			printReqListsOnConsole(dSeparatedNodeIDs, requisiteObsNodeIDs,
-					requisiteUnobsNodeIDs);
+			IO.printReqListsOnConsole(dSeparatedNodeIDs, requisiteObsNodeIDs,
+					requisiteProbNodeIDs);
 
-			printReqListsInFile(pw, queryNodeIDsStr, obsNodeIDsStr,
+			IO.printReqListsInFile(pw, queryNodeIDsStr, obsNodeIDsStr,
 					dSeparatedNodeIDs, requisiteObsNodeIDs,
-					requisiteUnobsNodeIDs);
+					requisiteProbNodeIDs);
 		}
 
 		br.close();
 		pw.close();
-	}
-
-	private static void printReqListsInFile(PrintWriter pw,
-			String queryNodeIDsStr, String obsNodeIDsStr,
-			List<Integer> dSeparatedNodeIDs, List<Integer> requisiteObsNodeIDs,
-			List<Integer> requisiteUnobsNodeIDs) {
-		pw.print("query:");
-		pw.print(queryNodeIDsStr);
-		pw.print(" ");
-		pw.print("obs:");
-		pw.print(obsNodeIDsStr);
-		pw.print(" ");
-		pw.print("dsep:");
-		pw.print(Util.getNodeIDsAsDelimetedStr(dSeparatedNodeIDs));
-		pw.print(" ");
-		pw.print("req-obs:");
-		pw.print(Util.getNodeIDsAsDelimetedStr(requisiteObsNodeIDs));
-		pw.print(" ");
-		pw.print("req-unobs:");
-		pw.print(Util.getNodeIDsAsDelimetedStr(requisiteUnobsNodeIDs));
-		pw.println();
-	}
-
-	private static void printReqListsOnConsole(List<Integer> dSeparatedNodes,
-			List<Integer> requisiteObsNodes, List<Integer> requisiteUnobsNodes) {
-		System.out.println("\n====D-SeparatedNodes======");
-		for (int nodeID : dSeparatedNodes) {
-			System.out.print(nodeID + 1);
-			System.out.print("|");
-		}
-		System.out.println();
-
-		System.out.println("\n====RequisiteUnobsNodes======");
-		for (int nodeID : requisiteUnobsNodes) {
-			System.out.print(nodeID + 1);
-			System.out.print("|");
-		}
-		System.out.println();
-
-		System.out.println("\n====RequisiteObsNodes======");
-		for (int nodeID : requisiteObsNodes) {
-			System.out.print(nodeID + 1);
-			System.out.print("|");
-		}
-		System.out.println();
 	}
 
 	private static void processScheduledQ(BayesianNetwork network,
@@ -116,9 +76,11 @@ public class QueryHelper {
 			Direction dir = scheduled.getDirection();
 			boolean isObs = scheduled.getScheduledNode().isObserved();
 
-			System.out.println("Checking node: "
-					+ (scheduled.getScheduledNode().getID() + 1)
-					+ " from direction-" + dir);
+			/*
+			 * System.out.println("Checking node: " +
+			 * (scheduled.getScheduledNode().getID() + 1) + " from direction-" +
+			 * dir);
+			 */
 
 			if (dir == Direction.CHILD && isObs) {
 				// blocked
@@ -163,15 +125,14 @@ public class QueryHelper {
 
 	private static void setRequiredLists(BayesianNetwork network,
 			List<Integer> dSeparatedNodes, List<Integer> requisiteObsNodes,
-			List<Integer> requisiteUnobsNodes) {
+			List<Integer> requisiteProbNodes) {
 		for (Node node : network.getNodes()) {
-			//if (!node.isObserved() && !node.isVisited()) {
-			if (!node.isVisited()) {
+			if (node.isObserved() || !node.isVisited()) {
 				dSeparatedNodes.add(node.getID());
 			}
 
-			if (!node.isObserved() && node.isMarkedTop()) {
-				requisiteUnobsNodes.add(node.getID());
+			if (node.isMarkedTop()) {
+				requisiteProbNodes.add(node.getID());
 			}
 
 			if (node.isObserved() && node.isVisited()) {
